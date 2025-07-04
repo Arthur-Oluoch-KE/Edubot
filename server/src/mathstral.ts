@@ -7,23 +7,26 @@ export const askMathstral = async (query: string): Promise<string> => {
   if (!apiKey) throw new Error('HUGGINGFACE_API_KEY is not set')
 
   try {
-    const response = await fetch('https://api-inference.huggingface.co/models/mixtral-8x7b-instruct-v0.1', {
+    const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ inputs: query }),
+      body: JSON.stringify({
+        inputs: `<s>[INST] ${query} [/INST]`,
+        parameters: { max_new_tokens: 512, temperature: 0.7 },
+      }),
     })
 
     if (!response.ok) {
-      throw new Error(`Mathstral API returned status ${response.status}: ${await response.text()}`)
+      throw new Error(`Hugging Face API returned status ${response.status}: ${await response.text()}`)
     }
 
     const data = await response.json()
     return data[0]?.generated_text || ''
   } catch (error) {
-    console.error('Mathstral error:', error)
-    throw new Error('Mathstral API request failed')
+    console.error('Hugging Face error:', error)
+    throw new Error('Hugging Face API request failed')
   }
 }
