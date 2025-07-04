@@ -1,23 +1,25 @@
 {
-    "builds": [
-      {
-        "src": "client/package.json",
-        "use": "@vercel/node",
-        "config": { "includeFiles": ["client/**"] }
-      },
-      {
-        "src": "api/ask.ts",
-        "use": "@vercel/node"
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "client/dist"
       }
-    ],
-    "rewrites": [
-      {
-        "source": "/api/(.*)",
-        "destination": "/api/ask"
-      },
-      {
-        "source": "/(.*)",
-        "destination": "/client/index.html"
-      }
-    ]
-  }
+    },
+    {
+      "src": "api/ask.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/ask"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/client/dist/index.html"
+    }
+  ]
+}

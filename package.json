@@ -1,11 +1,14 @@
 {
-      "name": "edubot",
-      "version": "1.0.0",
-      "scripts": {
-            "build": "cd client && npm run build",
-            "install": "cd client && npm install && cd ../server && npm install"
-      },
-      "dependencies": {
-            "@vercel/node": "^2.3.0"
-      }
+  "name": "edubot",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd client && npm run build",
+    "install": "cd client && npm install"
+  },
+  "dependencies": {
+    "@vercel/node": "^3.2.0"
+  },
+  "devDependencies": {
+    "@vercel/static-build": "^2.5.22"
+  }
 }
