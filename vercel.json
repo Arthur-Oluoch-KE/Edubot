@@ -1,12 +1,23 @@
 {
-       "rewrites": [
-         {
-           "source": "/api/(.*)",
-           "destination": "/api/ask"
-         },
-         {
-           "source": "/(.*)",
-           "destination": "/client/index.html"
-         }
-       ]
-     }
+    "builds": [
+      {
+        "src": "client/package.json",
+        "use": "@vercel/node",
+        "config": { "includeFiles": ["client/**"] }
+      },
+      {
+        "src": "api/ask.ts",
+        "use": "@vercel/node"
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "/api/ask"
+      },
+      {
+        "source": "/(.*)",
+        "destination": "/client/index.html"
+      }
+    ]
+  }
