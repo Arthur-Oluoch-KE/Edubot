@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 3000
 app.use(cors())
 app.use(express.json())
 
-const isMathQuery = (query: string): boolean => {
+const isMathQuery = (question: string): boolean => {
   const mathKeywords = /\b(solve|calculate|math|equation|algebra|geometry)\b/i
-  return mathKeywords.test(query)
+  return mathKeywords.test(question)
 }
 
 // Wrap async route handlers to catch errors and pass them to Express error handler
@@ -29,21 +29,21 @@ function asyncHandler(
 app.post(
   '/api/ask',
   asyncHandler(async (req: Request, res: Response) => {
-    const { query, subject } = req.body as { query: string; subject: string }
-    if (!query) return res.status(400).json({ error: 'Query is required' })
+    const { question, subject } = req.body as { question: string; subject: string }
+    if (!question) return res.status(400).json({ error: 'Question is required' })
 
     const inappropriateContent = /\b(badword1|badword2)\b/i
-    if (inappropriateContent.test(query)) {
+    if (inappropriateContent.test(question)) {
       return res.status(400).json({ error: 'Inappropriate content detected' })
     }
 
     try {
       let response: string
-      if (subject === 'math' || isMathQuery(query)) {
-        response = await askMathstral(query)
+      if (subject === 'math' || isMathQuery(question)) {
+        response = await askMathstral(question)
         if (!response) throw new Error('Mathstral failed')
       } else {
-        response = await askGrok(query)
+        response = await askGrok(question)
         if (!response) throw new Error('Grok failed')
       }
       res.json({ response })
@@ -51,9 +51,9 @@ app.post(
       console.error(error)
       try {
         const fallbackResponse =
-          subject === 'math' || isMathQuery(query)
-            ? await askGrok(query)
-            : await askMathstral(query)
+          subject === 'math' || isMathQuery(question)
+            ? await askGrok(question)
+            : await askMathstral(question)
         res.json({
           response:
             fallbackResponse ||

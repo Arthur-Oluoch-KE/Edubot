@@ -24,7 +24,7 @@ function App() {
             Your AI-powered homework helper with specialized tutors!
           </p>
           <p className="text-md text-gray-500">
-            Math problems? Ask Mathstral! 🧮 General questions? Grok has answers! 🌟
+            Math problems? Ask Mistralai! 🧮 General questions? Deepseek has answers! 🌟
           </p>
         </motion.header>
         

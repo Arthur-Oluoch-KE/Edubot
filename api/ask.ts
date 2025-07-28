@@ -2,9 +2,9 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 import { askMathstral } from '../server/src/mathstral'
 import { askGrok } from '../server/src/grok'
 
-const isMathQuery = (query: string): boolean => {
+const isMathQuery = (question: string): boolean => {
   const mathKeywords = /\b(solve|calculate|math|equation|algebra|geometry)\b/i
-  return mathKeywords.test(query)
+  return mathKeywords.test(question)
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -22,25 +22,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .json({ error: 'Method not allowed' })
   }
 
-  const { query, subject } = req.body as { query: string; subject: string }
-  if (!query) {
+  // Check for required environment variables
+  if (!process.env.HUGGINGFACE_API_KEY) {
+    return res.status(500).setHeader('Access-Control-Allow-Origin', '*')
+      .json({ error: 'Server configuration error: HUGGINGFACE_API_KEY is not set' })
+  }
+  if (!process.env.OPENROUTER_API_KEY) {
+    return res.status(500).setHeader('Access-Control-Allow-Origin', '*')
+      .json({ error: 'Server configuration error: OPENROUTER_API_KEY is not set' })
+  }
+
+  const { question, subject } = req.body as { question: string; subject: string }
+  if (!question) {
     return res.status(400).setHeader('Access-Control-Allow-Origin', '*')
-      .json({ error: 'Query is required' })
+      .json({ error: 'Question is required' })
   }
 
   const inappropriateContent = /\b(badword1|badword2)\b/i
-  if (inappropriateContent.test(query)) {
+  if (inappropriateContent.test(question)) {
     return res.status(400).setHeader('Access-Control-Allow-Origin', '*')
       .json({ error: 'Inappropriate content detected' })
   }
 
   try {
     let response: string
-    if (subject === 'math' || isMathQuery(query)) {
-      response = await askMathstral(query)
+    if (subject === 'math' || isMathQuery(question)) {
+      response = await askMathstral(question)
       if (!response) throw new Error('Mathstral failed')
     } else {
-      response = await askGrok(query)
+      response = await askGrok(question)
       if (!response) throw new Error('Grok failed')
     }
     res.status(200).setHeader('Access-Control-Allow-Origin', '*')
@@ -48,7 +58,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     console.error(error)
     try {
-      const fallbackResponse = subject === 'math' || isMathQuery(query) ? await askGrok(query) : await askMathstral(query)
+      const fallbackResponse = subject === 'math' || isMathQuery(question) ? await askGrok(question) : await askMathstral(question)
       res.status(200).setHeader('Access-Control-Allow-Origin', '*')
         .json({ response: fallbackResponse || 'Sorry, I couldn’t find an answer. Try rephrasing your question!' })
     } catch (fallbackError) {

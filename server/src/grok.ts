@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export const askGrok = async (query: string): Promise<string> => {
+export const askGrok = async (question: string): Promise<string> => {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set')
 
@@ -15,7 +15,7 @@ export const askGrok = async (query: string): Promise<string> => {
       },
       body: JSON.stringify({
         model: 'deepseek/deepseek-chat:free',
-        messages: [{ role: 'user', content: query }],
+        messages: [{ role: 'user', content: question }],
         temperature: 0.7,
         max_tokens: 512,
       }),
