@@ -16,7 +16,7 @@ const Chat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
+    
   const handleSendMessage = async (question) => {
     if (!question.trim()) return;
 
