@@ -15,13 +15,16 @@ export default defineConfig({
     }
   },
   esbuild: {
-    loader: 'tsx', // Or 'jsx' depending on your needs
+    loader: 'tsx',  
         include: [
           'src/**/*.jsx',
           'src/**/*.tsx',
-          'src/**/*.js', // Add this line to include .js files
-          'src/**/*.ts',  // Add this line to include .ts files
-          // ... other paths if necessary
+          'src/**/*.js',  
+          'src/**/*.ts',   
+           
         ],
+  },
+  build: {
+    outDir: 'dist'   
   },
 })
