@@ -1,6 +1,6 @@
 export const askQuestion = async (question, subject) => {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/ask';
-  const vercelApiUrl = import.meta.env.VITE_VERCEL_API_URL || 'https://edubot-ixey.vercel.app/api/ask';
+  const vercelApiUrl = import.meta.env.VITE_VERCEL_API_URL || 'https://edubot-2ldu.onrender.com/api/ask';
   const isProduction = import.meta.env.MODE === 'production'
   const targetUrl = isProduction ? vercelApiUrl : apiUrl
 
