@@ -14,6 +14,7 @@ const Chat = () => {
 
   // Scroll to bottom on new messages
   useEffect(() => {
+     fetch(`${import.meta.env.VITE_API_URL}/api/ask`)
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
