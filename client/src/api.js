@@ -1,8 +1,9 @@
 export const askQuestion = async (question, subject) => {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/ask';
-  const vercelApiUrl = import.meta.env.VITE_VERCEL_API_URL || 'https://edubot-2ldu.onrender.com';
+  const vercelApiUrl = import.meta.env.VITE_VERCEL_API_URL || 'https://edubot-2ldu.onrender.com/api/ask';
   const isProduction = import.meta.env.MODE === 'production'
   const targetUrl = isProduction ? vercelApiUrl : apiUrl
+  console.log('API URL:', apiUrl);
 
   try {
     const response = await fetch(targetUrl, {
@@ -15,6 +16,7 @@ export const askQuestion = async (question, subject) => {
       throw new Error(`Network response was not ok: ${response.status}, ${JSON.stringify(errorData)}`);
     }
     const data = await response.json();
+    console.log('API response:', data);
     console.log('api.js response:', data);  
     return data.answer || data;  
   } catch (error) {
