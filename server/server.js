@@ -13,6 +13,7 @@ app.use(cors({
   origin: 'https://edubot-eight.vercel.app',
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
+  credentials: true,
 }));
 
 app.use(express.json());
