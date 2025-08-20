@@ -23,7 +23,7 @@ const Input = ({ onSendMessage, disabled }) => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Ask me about math, science, history, or language arts!"
+        placeholder="Ask here..."
         className="w-full p-4 pl-14 text-lg border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 active:ring-blue-300"
         disabled={disabled}
         whileFocus={{ scale: 1.01, boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)" }}

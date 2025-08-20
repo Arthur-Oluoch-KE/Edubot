@@ -19,15 +19,48 @@ const Chat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-    
+   
+    // Save messages to localStorage
+  useEffect(() => {
+    localStorage.setItem('edubotMessages', JSON.stringify(messages));
+  }, [messages]);
+
   const handleSendMessage = async (question) => {
     if (!question.trim()) return;
 
-    // Validate input
+    // Detect greetings (case-insensitive)
+    const greetings = ['hi', 'hello', 'hey', 'hola', 'greetings', 'yo', 'what\'s up', 'sup'];
+    const isGreeting = greetings.some(greeting => 
+      question.toLowerCase().trim() === greeting || 
+      question.toLowerCase().trim().startsWith(greeting + ' ')
+    );
+
+    // Add user message
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: question,
+      subject: 'general',
+    };
+    setMessages((prev) => [...prev, userMessage]);
+
+    if (isGreeting) {
+      // Respond with greeting message
+      const greetingMessage = {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: "Hello there! I am Edubot. I'm happy to help you learn and grow. Select any subject below, type your questions in the chatbot and let's have a wonderful journey learning together!",
+        subject: 'general',
+      };
+      setMessages((prev) => [...prev, greetingMessage]);
+      return;
+    }
+
+    // Validate input for non-greeting messages
     const validation = validateInput(question);
     if (!validation.isValid) {
       const errorMessage = {
-        id: Date.now(),
+        id: Date.now() + 1,
         type: 'bot',
         content: validation.error,
         subject: 'general',
@@ -42,26 +75,20 @@ const Chat = () => {
       finalSubject = 'math';
     }
 
-    // Add user message
-    const userMessage = {
-      id: Date.now(),
-      type: 'user',
-      content: question,
-      subject: finalSubject,
-    };
-    
-    setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
     try {
-      const response = await askQuestion(question, finalSubject);
-      console.log('API response:', response); // Debug
+      const conversationHistory = messages.slice(-10).map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.content,
+      }));
 
-      // Handle response (string or object with answer)
+      const response = await askQuestion(question, finalSubject, conversationHistory);
+      console.log('API response:', response);
+
       const answer = typeof response === 'string' ? response : response.answer || 'No response received';
-      const model = finalSubject === 'math' ? 'mathstral' : 'grok'; // Fallback model assignment
+      const model = finalSubject === 'math' ? 'mathstral' : 'grok';
 
-      // Add bot response
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
@@ -72,8 +99,7 @@ const Chat = () => {
       
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error('Chat error:', error.message); // Debug
-      // Add error message
+      console.error('Chat error:', error.message);
       const errorMessage = {
         id: Date.now() + 1,
         type: 'bot',
