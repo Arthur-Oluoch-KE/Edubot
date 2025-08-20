@@ -49,7 +49,7 @@ const Chat = () => {
       const greetingMessage = {
         id: Date.now() + 1,
         type: 'bot',
-        content: "Hello there! I am Edubot. I'm happy to help you learn and grow. Select any subject below, type your questions in the chatbot and let's have a wonderful journey learning together!",
+        content: "Hello there! I am Edubot. I'm happy to help you learn and grow. Select any subject below, type your questions in the chatbox and let's have a wonderful journey learning together!",
         subject: 'general',
       };
       setMessages((prev) => [...prev, greetingMessage]);
