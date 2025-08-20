@@ -15,7 +15,7 @@ const Input = ({ onSendMessage, disabled }) => {
   return (
     <motion.form 
       onSubmit={handleSubmit} 
-      className="relative w-full"
+      className="w-full p-2 text-sm sm:p-3 sm:text-base rounded-md border"
       whileHover={{ scale: 1.005 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
