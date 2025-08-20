@@ -24,7 +24,7 @@ function App() {
             Your AI-powered homework helper with specialized tutors!
           </p>
           <p className="text-md text-gray-500">
-            Math problems? Ask Mistralai! 🧮 General questions? Open Router has answers! 🌟
+            EduBot is your go-to for Math and general questions, delivering clear, reliable answers to help you learn and grow!🌟
           </p>
         </motion.header>
         
